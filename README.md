@@ -1,251 +1,170 @@
-# Open-Tap v0.0.1alpha
+# Open-Tap 🦞
 
-**Cross-network messaging for AI agents.**
-
-Fire-and-forget WebSocket relay. Deploy to Fly.io, connect clients, exchange messages between bots on different networks.
-
-## What It Does
-
-Open-Tap lets two (or more) bots/computers exchange messages through a central relay server. Think of it as "HTTP for AI agents" — a simple pipe for bot-to-bot communication across networks.
-
-**Real-world use:** You and a friend run bots on different WiFi networks. You send a message from your bot, it appears on theirs instantly.
+**Like a walkie-talkie for computer programs.**
 
 ---
 
-## 📦 Prerequisites
+## What Is This? (Simple Version)
 
-- **Node.js 18+** ([Download](https://nodejs.org/))
-- **npm** (comes with Node)
+Imagine you and your friend both have walkie-talkies.
 
-Check:
+**Old way (Open-Tap v1):**
+- You both call into a radio station
+- The radio station forwards your messages
+- Works great, but needs the station to be running
+
+**New way (Open-Tap P2P):**
+- You both turn on your walkie-talkies
+- They find each other automatically (if close by)
+- Or you tell them where to find each other (if far away)
+- Then you talk **directly** — no radio station needed!
+
+That's Open-Tap. It lets two computer programs (bots, agents, whatever) send messages to each other over the internet.
+
+---
+
+## Two Ways To Use It
+
+### Way 1: Same Room / Same WiFi (Easiest)
+
+Both computers on the same WiFi? They find each other automatically.
+
+**You:**
 ```bash
-node --version  # Should say v18.x.x or higher
-npm --version   # Should say 9.x.x or higher
+npm install -g thindery/open-tap
+tap --p2p
+```
+
+**Your friend:**
+```bash
+npm install -g thindery/open-tap
+tap --p2p
+```
+
+Wait 5 seconds, then type `/peers` — you'll see each other!
+
+Send a message:
+```
+/to <friend-id> Hey can you hear me?
+```
+
+### Way 2: Different Places / Different WiFi
+
+You're at home. Friend is at their house. Different internet.
+
+You need a **phonebook** (we call it a "rendezvous server") to help you find each other.
+
+**Step 1:** Someone runs the phonebook
+```bash
+tap-rendezvous
+```
+
+Or deploy to Fly.io (free):
+```bash
+fly launch
+fly deploy
+```
+
+**Step 2:** Both connect to the phonebook
+```bash
+tap --p2p --rendezvous=wss://your-phonebook.fly.dev
+```
+
+**Step 3:** Find each other and chat!
+```
+/peers                 # See who's online
+/to <their-id> hello   # Send message
+/reply hey back        # Reply (no ID needed!)
 ```
 
 ---
 
-## 🚀 Quick Start (Local Test)
+## The Magic Part
 
-### Step 1: Download/Open the Code
+Once you find each other through the phonebook, you talk **directly**.
 
-```bash
-cd ~/projects/open-tap
-npm install
-```
+The phonebook just says "Hey, they're at this address." Then you hang up with the phonebook and talk straight to each other.
 
-### Step 2: Start the Relay Server
+It's like:
+1. You call 411 (directory)
+2. They tell you your friend's number
+3. You hang up with 411
+4. You call your friend directly
 
-Terminal 1:
-```bash
-npm run relay
-```
-
-You should see:
-```
-🚀 Open-Tap Relay starting on port 3000...
-📡 Relay ready at ws://localhost:3000
-✅ Health endpoint: http://localhost:3000/health
-```
-
-### Step 3: Connect Your First Client
-
-Terminal 2 (new window):
-```bash
-npm run client
-```
-
-You should see:
-```
-🔥 Open-Tap Client v0.0.1alpha
-
-Connecting to ws://localhost:3000...
-✅ Connected to relay
-
-📋 Your ID: a7f3-9d2e-b1c8 (save this!)
-🔗 Relay: ws://localhost:3000
-
-Type /help for commands or start typing a message.
-> 
-```
-
-**Save that ID.** Copy it somewhere.
-
-### Step 4: Connect Second Client
-
-Terminal 3 (new window):
-```bash
-npm run client
-```
-
-This gives you a second unique ID.
-
-### Step 5: Send Your First Message
-
-In **Terminal 3**:
-```
-/to a7f3-9d2e-b1c8 This is Remy. Are you there?
-```
-
-(Replace `a7f3-9d2e-b1c8` with the ID from Terminal 2)
-
-In **Terminal 2**, you should see:
-```
-📨 From 3c8a-4e1d-b9f2: This is Remy. Are you there?
-```
-
-**Success!** 🎉
+That's why it's called **peer-to-peer** (P2P). No middleman after the initial "where are you?"
 
 ---
 
-## 🎮 Available Commands
+## Quick Commands
 
-Once the client is running, type:
+Once you're running, type:
 
-| Command | What it does |
+| Command | What It Does |
 |---------|--------------|
-| `/to <id> <message>` | Send to a specific client |
-| `/broadcast <message>` | Send to ALL connected clients |
-| `/target <id>` | Set default target for `/send` |
-| `/send <message>` | Send to your set target |
-| `/id` | Show your client ID |
-| `/relay` | Show relay URL |
-| `/help` | Show commands |
-| `/quit` | Exit the client |
+| `/id` | Show your unique ID |
+| `/peers` | See who's online |
+| `/to <id> <msg>` | Send a message |
+| `/reply <msg>` | Reply to whoever messaged you last |
+| `/help` | See all commands |
+| `/quit` | Exit |
 
 ---
 
-## 🔬 The "This is Remy" Test
+## Why This Exists
 
-This is the official acceptance test for v0.0.1alpha:
+Most chat apps go through a central server for every message. That's fine, but:
+- Server goes down? No chat.
+- Server owner reads your messages? They can.
+- Server costs money? Someone pays.
 
-1. Start relay (`npm run relay`)
-2. Start two clients (`npm run client` in two terminals)
-3. Copy ID from Client A
-4. From Client B: `/to <client-a-id> This is Remy. Are you there?`
-5. Client A should receive the message
-6. From Client A: `/to <client-b-id> Yeah I'm here! 🦞`
-7. Client B confirms receipt
+Open-Tap is different:
+- Starts your own mini-server on your computer
+- Finds friends automatically or via phonebook
+- Talks directly after that
+- No central server needed for the actual chat
 
-**Test passed?** You have working cross-network bot messaging.
-
----
-
-## 🌍 Testing Across Networks (The Real Test)
-
-Local testing is just the warm-up. The real test is with your friend on a different network.
-
-### Option A: Use Your Public IP (Fastest)
-
-If you have a public IP or can port forward:
-
-1. Find your public IP: `curl ifconfig.me`
-2. Port forward router: 3000 → your computer
-3. Give friend your public IP: `ws://YOUR-IP:3000`
-4. Friend sets relay: `export OPEN_TAP_RELAY=ws://YOUR-IP:3000`
-5. Friend runs: `npm run client`
-6. Exchange messages!
-
-### Option B: Deploy to Fly.io (Easiest)
-
-See [DEPLOY.md](./DEPLOY.md) for step-by-step Fly.io deployment.
-
-**Result:** You get a public URL like `wss://open-tap-relay.fly.dev`
-
-Your friend just runs:
-```bash
-export OPEN_TAP_RELAY=wss://your-app.fly.dev
-npm run client
-```
+It's like having your own walkie-talkie channel.
 
 ---
 
-## ⚠️ Alpha Limitations
+## Technical Stuff (If You Care)
 
-This is intentionally minimal. Know what you're getting:
+- **Same WiFi:** Uses mDNS (like how your printer shows up automatically)
+- **Different networks:** Uses WebSocket rendezvous + direct P2P
+- **Security:** GUIDs identify peers, optional authentication
+- **Protocol:** WebSocket for transport, JSON for messages
+- **No Blockchain:** Just simple tech that works
 
-| Limitation | What it means |
-|------------|---------------|
-| **No persistence** | If recipient is offline, message is lost |
-| **No encryption** | Messages travel unencrypted (WSS recommended for production) |
-| **No authentication** | Anyone with relay URL can connect |
-| **No message history** | Fire-and-forget only |
-| **Rate limits** | None yet (coming v0.1.0) |
-| **Memory only** | Relay crashes = all connections lost |
-
-**Use for:** Testing, demos, proof-of-concept, controlled environments  
-**Don't use for:** Production, sensitive data, high-load scenarios
+See the [docs folder](./docs) for detailed technical documentation.
 
 ---
 
-## 📁 Project Structure
-
-```
-open-tap/
-├── relay/
-│   └── server.js        # WebSocket relay server
-├── src/
-│   ├── index.js         # Client entry point
-│   ├── client.js        # WebSocket client logic
-│   ├── ui.js            # Terminal UI (readline)
-│   └── identity.js      # GUID generation
-├── fly.toml             # Fly.io deployment config
-├── Dockerfile           # Container image
-└── package.json         # Dependencies (just 'ws')
-```
-
----
-
-## 🛠️ Troubleshooting
-
-### "Error: Cannot find module 'ws'"
+## Install
 
 ```bash
-npm install
+npm install -g thindery/open-tap
 ```
 
-### "Connection refused" or "ECONNREFUSED"
+That's it. No config files. No setup. Just works.
 
-Make sure relay is running on Terminal 1:
+---
+
+## Test It Now
+
+Two terminals on your machine:
+
+**Terminal 1:**
 ```bash
-npm run relay
+tap --p2p
 ```
 
-Verify relay is healthy:
+**Terminal 2:**
 ```bash
-curl http://localhost:3000/health
+tap --p2p
 ```
 
-Should return: `{"status":"ok","clients":0}`
-
-### "Invalid client ID"
-
-IDs are 12 characters with hyphens: `a7f3-9d2e-b1c8`
-
-Make sure you're using the full ID shown when client connects.
-
-### Friend can't connect to your local relay
-
-Your `localhost` is only on your machine. For cross-network:
-- Deploy to Fly.io, OR
-- Use ngrok: `ngrok http 3000`, OR
-- Port forward your router
+Wait 5 seconds. Type `/peers` in both. See each other. Chat!
 
 ---
 
-## 🎯 Next Steps (Post-Test)
-
-1. ✅ Test locally (this README)
-2. ⏭️ Test with friend (deploy or use ngrok)
-3. ⏭️ Iterate to v0.1.0 proper alpha (tests, persistence, rate limits)
-4. ⏭️ Build Napster-style P2P (post-POC)
-
----
-
-## 📜 License
-
-MIT — Open source, do what you want.
-
----
-
-*Built for the "This is Remy" moment. 🦞*
+*Built with 🦞 by thindery*
