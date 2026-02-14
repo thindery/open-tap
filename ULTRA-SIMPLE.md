@@ -1,32 +1,35 @@
-# Ultra-Simple: Connect in 3 Steps
+# Ultra-Simple: Connect in 3 Steps ✅ IMPLEMENTED
 
-**The dream:** No copy-pasting URLs. No exchanging IDs. Just run, scan, chat.
+**No copy-pasting IDs. Just run, scan, chat.**
 
 ---
 
-## 🎯 Goal: 3 Steps Total
+## 🎯 The 3-Step Flow (Working Now)
 
 | Step | Person | Action |
 |------|--------|--------|
-| 1 | You | Run one command |
-| 2 | Friend | Scan QR or type 4-digit code |
-| 3 | Both | Chat immediately (no ID exchange) |
+| 1 | You | `tap --host` |
+| 2 | Friend | `npx thindery/open-tap <url>` (or scan QR) |
+| 3 | Either | `/reply <message>` |
 
 ---
 
-## 💡 Option A: QR Code (Best Experience)
+## 💻 How It Works
 
-### You:
+### Step 1: You Run Host
 ```bash
 tap --host
 ```
 
-Terminal shows:
+Output:
 ```
-🚀 Starting relay + tunnel...
-✅ Ready!
+🚀 Starting relay server...
+✅ Relay running on port 3000
+🌍 Creating public tunnel...
+✅ Tunnel ready: wss://abc123.ngrok-free.app
 
-📱 Have your friend scan this:
+📱 Scan with phone or camera:
+
 ┌─────────────────┐
 │ ▄▄▄▄▄ ▄▄▄ ▄▄▄▄▄ │
 │ █   █ ▄▄▄ █   █ │
@@ -34,174 +37,146 @@ Terminal shows:
 │ ▄▄▄▄▄ ▀▄▀ ▄▄▄▄▄ │
 └─────────────────┘
 
-Or type: tap-join wss://abc123.ngrok-free.app
+╔════════════════════════════════════════════════════╗
+  💬 Tell your friend to run:
+
+     npx thindery/open-tap wss://abc123.ngrok-free.app
+
+  Or scan the QR code above with phone/camera
+╚════════════════════════════════════════════════════╝
+
+🔥 Connecting client to relay...
+✅ Connected! Your ID: a7f3-9d2e-b1c8-4d5e
+💡 Share this ID with your friend
+
+> 
 ```
 
-### Friend:
-**Option 1:** Scan QR with phone → opens terminal app → auto-connected
-
-**Option 2:** Type what they see below the QR:
+### Step 2: Friend Connects
 ```bash
-tap-join wss://abc123.ngrok-free.app
+npx thindery/open-tap wss://abc123.ngrok-free.app
 ```
 
-### Auto-Discovery Bonus:
-If friend is on **same WiFi**, they see you automatically:
-```bash
-tap
-# Shows: "Found peer: thindery@192.168.1.42"
-> Hello!
+**No copy-paste needed if they scan the QR!**
+
+### Step 3: Chat with /reply
+When friend sends you a message, just:
 ```
+/reply Yeah I'm here! 🦞
+```
+
+**No ID required!** `/reply` automatically targets the last person who messaged you.
 
 ---
 
-## 🔢 Option B: 4-Digit Pairing Code
+## 🎮 Key Commands
 
-### You:
-```bash
-tap --host --pin
-```
-
-Terminal shows:
-```
-🚀 Starting relay...
-✅ Ready on wss://abc123.ngrok-free.app
-
-🔢 Your pairing code: 5847
-
-Tell your friend to run: tap-join 5847
-```
-
-### Friend:
-```bash
-tap-join 5847
-```
-
-**Behind the scenes:** A tiny directory service maps 5847 → the actual WebSocket URL. Codes expire in 10 minutes.
+| Command | What it does |
+|---------|--------------|
+| `/to <id> <msg>` | Send to specific ID (old way) |
+| `/reply <msg>` | **Reply to last peer (NEW!)** |
+| `/broadcast <msg>` | Send to everyone |
+| `/target <id>` | Set default target for `/send` |
+| `/send <msg>` | Send to default target |
+| `/id` | Show your ID |
+| `/help` | Show all commands |
+| `/quit` | Exit |
 
 ---
 
-## 📋 Option C: Clipboard Magic
-
-### You:
-```bash
-tap --host
-```
-
-Auto-copies to clipboard:
-```
-✅ Copied to clipboard: wss://abc123.ngrok-free.app
-📋 Paste in Discord/iMessage to your friend
-```
-
-### Friend:
-Pastes into terminal:
-```bash
-tap wss://abc123.ngrok-free.app
-```
-
----
-
-## 🔗 Option D: Short Links
-
-Transform long URLs into aliases:
-
-| Long URL | Short |
-|----------|-------|
-| wss://abc123.ngrok-free.app | tap.run/xyz7 |
-| wss://your-app.fly.dev | tap.run/thindery |
-
-### You:
-```bash
-tap --host
-```
-
-Shows:
-```
-✅ Short URL: tap.run/xyz7 (expires in 1 hour)
-Tell friend: tap-join xyz7
-```
-
-### Friend:
-```bash
-tap-join xyz7
-```
-
----
-
-## 📊 Comparison
-
-| Method | Steps | Requires | Trade-off |
-|--------|-------|----------|-----------|
-| Current | 4 | Copy-paste URL | Works everywhere |
-| QR Code | 3 | Friend has camera | Best UX |
-| Pairing Code | 3 | Directory server | Centralized |
-| Clipboard | 3 | Manual paste | Low tech |
-| Short Links | 3 | URL service | Dependency |
-| mDNS (same WiFi) | 2 | Same network | Limited range |
-
----
-
-## 🏆 Recommended: QR + Short URL
-
-**Implementation:**
-1. You: `tap --host`
-2. Shows QR + short URL below it
-3. Friend: Either scan QR or type `tap-join xyz7`
-4. Auto-connected, no ID exchange needed
-
-**The "No ID Exchange" Trick:**
-Instead of:
-```
-You: What's your ID?
-Friend: 9b2c-8d1e...
-You: /to 9b2c-8d1e hello
-```
-
-Just:
-```
-Friend joins via QR
-Auto: "New peer connected: friend@9b2c-8d1e"
-You: /reply hello   (auto-targets last/new peer)
-```
-
----
-
-## 🛠️ Build Priority
-
-**Phase 1 (This week):**
-1. Add `qrcode-terminal` dependency
-2. Show QR in `--host` mode
-3. Add `tap-join <url>` command
-
-**Phase 2 (Next week):**
-1. Build short URL service (tap.run)
-2. Auto-discovery for mDNS
-3. `/reply` command (auto-target new peers)
-
-**Phase 3 (Future):**
-1. Mobile app to scan QR
-2. Push notifications
-3. Pairing codes with directory
-
----
-
-## 🎯 The 3-Step Promise
+## 🔄 Example Conversation
 
 **You:**
 ```bash
 tap --host
-# Shows QR code + short URL
 ```
 
-**Friend:**
+**Friend (types what you tell them):**
 ```bash
-# Option 1: Scan QR
-# Option 2: tap-join xyz7
+npx thindery/open-tap wss://abc123.ngrok-free.app
 ```
 
-**Result:** Instant connection. No URLs copied. No IDs exchanged.
+**Friend sends first message:**
+```
+/to a7f3-9d2e-b1c8-4d5e This is Remy. Are you there?
+```
+
+**You reply (no ID needed!):**
+```
+/reply Yeah I'm here! 🦞
+```
+
+**Friend replies (no ID needed!):**
+```
+/reply Sweet! It works!
+```
 
 ---
 
-Want me to build the QR code version now? (~30 minutes) 🦞
+## 📱 QR Code Support
+
+Install qrcode-terminal for QR display:
+```bash
+npm install -g qrcode-terminal
+```
+
+Then `tap --host` shows a scannable QR code. Friends can:
+- Scan with phone camera
+- Use QR scanner app
+- Just type the URL below the QR
+
+---
+
+## 🎯 What We Eliminated
+
+| Old Way | New Way |
+|---------|---------|
+| Copy URL, paste into Discord | QR code scan |
+| Friend copies URL from Discord | Types URL once (or scans) |
+| Exchange IDs back and forth | `/reply` command |
+| `export OPEN_TAP_RELAY=...` | URL as argument |
+| `/to <long-id> hello` | `/reply hello` |
+
+---
+
+## 🚀 Prerequisites
+
+**You (host):**
+```bash
+npm install -g thindery/open-tap
+npm install -g ngrok        # Optional, for tunnel
+npm install -g qrcode-terminal  # Optional, for QR codes
+```
+
+**Friend (connects):**
+```bash
+# Nothing! Just npx
+npx thindery/open-tap <url>
+```
+
+---
+
+## 💡 Pro Tips
+
+1. **Make alias shorter:**
+   ```bash
+   alias tap='npx thindery/open-tap'
+   # Then: tap --host
+   # Friend: tap wss://abc123.ngrok-free.app
+   ```
+
+2. **Use /reply after first message:** No more IDs!
+
+3. **QR codes save time:** Install `qrcode-terminal` once, scan forever
+
+4. **Same WiFi?** Even simpler — no tunnel needed, just IP address
+
+---
+
+## 🎉 Success in 3 Steps
+
+1. `tap --host`
+2. Friend: `npx thindery/open-tap <url>`
+3. `/reply hello`
+
+Done. No ID exchange. No config files. No copy-paste chain. 🦞
