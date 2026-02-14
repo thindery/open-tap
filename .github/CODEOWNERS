@@ -1,0 +1,28 @@
+# CODEOWNERS file for aitap
+# See: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Global default - all files require review from maintainer
+* @thindery
+
+# Security-sensitive files
+/.github/CODEOWNERS @thindery
+/SECURITY.md @thindery
+/LICENSE @thindery
+
+# CI/CD configuration
+/.github/workflows/ @thindery
+/.husky/ @thindery
+
+# Package management
+/package.json @thindery
+/package-lock.json @thindery
+
+# Documentation
+/README.md @thindery
+/CODE_OF_CONDUCT.md @thindery
+/CONTRIBUTING.md @thindery
+
+# Core source code
+/src/ @thindery
+/relay/ @thindery
+/meetingpoint/ @thindery

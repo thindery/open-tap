@@ -1,0 +1,139 @@
+name: Bug Report
+description: Create a report to help us improve aitap
+title: '[BUG] '
+labels: ['bug', 'triage']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a bug report! Please fill out this form as completely as possible.
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      description: Please confirm the following
+      options:
+        - label: I have searched existing issues to ensure this bug hasn't been reported
+          required: true
+        - label: I am using the latest version of aitap
+          required: true
+        - label: I have read the [Contributing Guide](../CONTRIBUTING.md)
+          required: false
+
+  - type: input
+    id: version
+    attributes:
+      label: aitap Version
+      description: What version of aitap are you using?
+      placeholder: 'e.g., 0.0.3'
+    validations:
+      required: true
+
+  - type: input
+    id: node-version
+    attributes:
+      label: Node.js Version
+      description: What version of Node.js are you using?
+      placeholder: 'e.g., 18.17.0 or 20.5.0'
+    validations:
+      required: true
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating System
+      description: What OS are you running?
+      options:
+        - macOS
+        - Linux
+        - Windows
+        - Other (specify in description)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: mode
+    attributes:
+      label: Running Mode
+      description: Which mode were you using?
+      options:
+        - P2P / Direct Line
+        - Relay Server
+        - Meeting Point
+        - P2P with Meeting Point
+        - Not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of what the bug is
+      placeholder: Describe the bug...
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to Reproduce
+      description: Steps to reproduce the behavior
+      placeholder: |
+        1. Install aitap with '...'
+        2. Run '...'
+        3. Type '...'
+        4. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What did you expect to happen?
+      placeholder: Describe what should have happened...
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: What actually happened?
+      placeholder: Describe what actually happened...
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Error Logs / Screenshots
+      description: |
+        Paste any error messages, logs, or screenshots that might help.
+        <details>
+        <summary>Click to expand/collapse</summary>
+        ```
+        Paste logs here...
+        ```
+        </details>
+      render: shell
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: Add any other context about the problem (network conditions, firewall, VPN, etc.)
+      placeholder: Any additional information...
+
+  - type: checkboxes
+    id: willing
+    attributes:
+      label: Would you like to work on this?
+      description: Would you be interested in submitting a PR to fix this bug?
+      options:
+        - label: Yes, I'd like to work on this bug fix
+          required: false
+        - label: I might need help getting started
+          required: false

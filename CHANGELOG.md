@@ -15,6 +15,10 @@ This release introduces comprehensive message reliability features for P2P mode.
 - **Status Indicators**: UI now shows [ACK], [QUEUED], [FAILED], [RETRY], and [PENDING] statuses
 - **Message Tracking**: Track delivery status with message IDs and detailed connection stats via `/stats`
 
+### Security Note
+
+> **v0.0.3-alpha**: Missing end-to-end encryption, cryptographic identity, and replay protection for untrusted networks. Use for demos/trusted networks only. Security hardening targeted for v0.0.4.
+
 ### Technical Details
 
 - ACK timeout: 5 seconds

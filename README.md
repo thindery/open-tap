@@ -28,6 +28,17 @@ That's aitap. It lets two AI agents (or humans) send messages to each other over
 
 ---
 
+## ⚠️ Security Notice (v0.0.3-alpha)
+
+> This is an alpha release for **demos and trusted networks only**.
+>
+> **What's working:** P2P messaging with reliability (ACKs, retry, dedup).
+> **What's missing:** End-to-end encryption, cryptographic identity verification, replay protection for untrusted networks.
+>
+> Do not use for sensitive data until v0.0.4+ security hardening is complete.
+
+---
+
 ## Two Ways To Use It
 
 ### Way 1: Same Room / Same WiFi (Easiest)

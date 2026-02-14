@@ -1,0 +1,52 @@
+# Project Authors and Contributors
+
+## Original Author
+
+- thindery <thindery@example.com> - Project creator and maintainer
+
+## Core Contributors
+
+*None yet — want to be the first? See [CONTRIBUTING.md](CONTRIBUTING.md)*
+
+## All Contributors
+
+We thank all the amazing people who have contributed to this project!
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+## How to Add Yourself
+
+Contributed to the project? Please add yourself following [our guidelines](CONTRIBUTING.md). You can either:
+
+1. Add your name to this file in a PR
+2. Use the [@all-contributors bot](https://allcontributors.org/docs/en/bot/usage) by commenting on an issue/PR:
+   ```
+   @all-contributors please add @username for code, docs, tests
+   ```
+
+## Contribution Types
+
+Contributions of any kind are welcome! This includes:
+
+- 💻 Code
+- 📖 Documentation
+- 🎨 Design
+- 📋 Bug reports
+- 💡 Ideas and feature requests
+- 🧪 Testing
+- 📢 Answering questions
+- 🔧 Maintenance
+
+## License
+
+All contributions to this project are under the MIT License. See [LICENSE](LICENSE) for details.
+
+---
+
+*This file lists humans who have contributed to the project. For dependency attributions, see package.json and NOTICE (if applicable).*
