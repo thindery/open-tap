@@ -32,6 +32,17 @@ async function findTunnel() {
   return null;
 }
 
+async function showQR(url) {
+  try {
+    const qrcode = await import('qrcode-terminal');
+    console.log('\n📱 Scan with phone or camera:\n');
+    qrcode.default.generate(url, { small: true });
+    console.log('');
+  } catch {
+    // qrcode-terminal not installed, skip QR display
+  }
+}
+
 async function startRelay() {
   return new Promise((resolve, reject) => {
     // Start relay as child process
@@ -130,15 +141,17 @@ async function main() {
     if (tunnel) {
       publicUrl = tunnel.url;
       ui.system(`✅ Tunnel ready: ${publicUrl}`);
+
+      // Show QR code
+      await showQR(publicUrl);
+
       ui.system('');
       ui.system('╔════════════════════════════════════════════════════╗');
       ui.system('  💬 Tell your friend to run:');
       ui.system('');
       ui.system(`     npx thindery/open-tap ${publicUrl}`);
       ui.system('');
-      ui.system('  Or if they have it installed:');
-      ui.system(`     export OPEN_TAP_RELAY=${publicUrl}`);
-      ui.system('     tap');
+      ui.system('   Or scan the QR code above with phone/camera');
       ui.system('╚════════════════════════════════════════════════════╝');
       ui.system('');
     } else {
@@ -163,6 +176,7 @@ async function main() {
     client.onMessage((msg) => {
       switch (msg.type) {
         case 'message':
+          lastPeer = msg.from; // Track sender for /reply
           ui.receive(msg.from, msg.payload);
           break;
         case 'ack':
@@ -182,6 +196,7 @@ async function main() {
 
     // Register commands
     let targetClient = null;
+    let lastPeer = null; // Track last peer who sent us a message
 
     ui.command('to', '<clientId> <message> - Send message', (args, full) => {
       if (args.length < 2) {
@@ -232,6 +247,24 @@ async function main() {
         client.send(targetClient, full);
       } catch (err) {
         ui.system(`Send failed: ${err.message}`);
+      }
+    });
+
+    ui.command('reply', '<message> or just type message - Reply to last peer', (args, full) => {
+      const message = full || args.join(' ');
+      if (!message) {
+        ui.system('Usage: /reply <message> or just type your message');
+        return;
+      }
+      if (!lastPeer) {
+        ui.system('No peer has messaged you yet. Use /to <id> <message> first.');
+        return;
+      }
+      try {
+        client.send(lastPeer, message);
+        ui.system(`Replied to ${lastPeer.slice(0, 8)}...`);
+      } catch (err) {
+        ui.system(`Reply failed: ${err.message}`);
       }
     });
 

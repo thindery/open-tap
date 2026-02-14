@@ -26,6 +26,7 @@ async function main() {
   const client = new OpenTapClient(RELAY_URL);
 
   let targetClient = null;
+  let lastPeer = null; // Track last sender for /reply
 
   ui.print('\n╔════════════════════════════════════════╗');
   ui.print('║     Open-Tap Client v0.0.1alpha        ║');
@@ -38,6 +39,7 @@ async function main() {
   client.onMessage((msg) => {
     switch (msg.type) {
       case 'message':
+        lastPeer = msg.from; // Track for /reply
         ui.receive(msg.from, msg.payload);
         break;
       case 'ack':
@@ -100,6 +102,24 @@ async function main() {
       client.send(targetClient, full);
     } catch (err) {
       ui.system(`Send failed: ${err.message}`);
+    }
+  });
+
+  ui.command('reply', '<message> - Reply to last peer', (args, full) => {
+    const message = full || args.join(' ');
+    if (!message) {
+      ui.system('Usage: /reply <message>');
+      return;
+    }
+    if (!lastPeer) {
+      ui.system('No peer has messaged you yet. Use /to <id> <message> first.');
+      return;
+    }
+    try {
+      client.send(lastPeer, message);
+      ui.system(`Replied to ${lastPeer.slice(0, 8)}...`);
+    } catch (err) {
+      ui.system(`Reply failed: ${err.message}`);
     }
   });
 

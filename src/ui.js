@@ -53,6 +53,8 @@ class TerminalUI {
    */
   showHelp() {
     this.print('\n╔═══ Open-Tap Commands ═══╗');
+    this.print('  KEY COMMAND: /reply <msg>  → Reply to last peer (no ID needed!)');
+    this.print('');
     for (const [name, { description }] of this.commands) {
       this.print(`  /${name.padEnd(12)} ${description}`);
     }
