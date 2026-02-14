@@ -15,6 +15,7 @@
 | **NKN** | Decentralized networking | Public key based | Relayed, reliable | Wallet addresses | Yes (SDKs) | ⭐⭐⭐⭐ Wallet required |
 | **gun.js** | Decentralized database | WebRTC + DHT | Eventual consistency | User.accounts | Yes | ⭐⭐⭐⭐ Graph API learning curve |
 | **simple-peer** | WebRTC wrapper | Manual signaling | WebRTC data channels | None (manual) | Yes (browser) | ⭐⭐⭐⭐ Simple but low-level |
+| **bitchat** | Offline mesh messaging | Bluetooth mesh | Best-effort mesh relay | Device-based | iOS/Android | ⭐⭐⭐⭐⭐ Works offline |
 
 ### Detailed Analysis
 
@@ -423,6 +424,32 @@ The example should use the Meeting Point server (or localhost for same-machine d
 - **Message Reactions** — Like Discord/Slack
 - **Plugin Marketplace** — Community extensions
 - **Federation** — Bridge to ActivityPub/Matrix
+
+#### 🔥 bitchat — Offline Mesh Inspiration
+
+**Source:** [bitchat.free](https://bitchat.free) | [GitHub: permissionlesstech/bitchat](https://github.com/permissionlesstech/bitchat)
+
+**What it is:** Bluetooth mesh messaging for iOS/Android. No internet, no servers, no phone numbers.
+
+**Why it inspires aitap:**
+- **Censorship resistance:** Works during internet outages, protests, disasters
+- **Infrastructure independence:** No central servers to shut down
+- **Privacy by default:** No phone numbers, no accounts
+- **Simplicity:** Devices discover and relay automatically
+
+**aitap learnings from bitchat:**
+1. **Offline resilience** — Could aitap gracefully degrade to local-only mode?
+2. **Mesh topology** — Multi-hop relay extends range beyond direct connections
+3. **Public domain** — bitchat released all code to public domain (max freedom)
+4. **Permissionless** — No accounts, no gatekeepers
+
+**Future integration (backlog):**
+- [ ] Research Bluetooth mesh feasibility for Node.js
+- [ ] Study bitchat whitepaper for protocol design patterns
+- [ ] Consider offline mesh as aitap fallback layer
+- [ ] Bridge between aitap (internet) and bitchat (offline) for hybrid scenarios
+
+**Status:** Research only. Not on current roadmap. Revisit for v0.2.0+
 
 ---
 
