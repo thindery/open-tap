@@ -3,15 +3,28 @@
   "version": "0.0.1alpha",
   "description": "WebSocket relay for fire-and-forget bot messaging",
   "main": "src/index.js",
+  "bin": {
+    "open-tap": "./src/index.js",
+    "open-tap-relay": "./relay/server.js",
+    "tap": "./src/index.js"
+  },
   "scripts": {
     "start": "node relay/server.js",
     "client": "node src/index.js",
     "relay": "node relay/server.js",
     "dev": "node relay/server.js"
   },
-  "keywords": ["websocket", "relay", "bot", "messaging"],
-  "author": "",
+  "keywords": ["websocket", "relay", "bot", "messaging", "p2p", "agents"],
+  "author": "thindery",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thindery/open-tap.git"
+  },
+  "bugs": {
+    "url": "https://github.com/thindery/open-tap/issues"
+  },
+  "homepage": "https://github.com/thindery/open-tap#readme",
   "dependencies": {
     "ws": "^8.14.2"
   },
