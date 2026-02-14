@@ -1,8 +1,9 @@
 # aitap 🦞
 
-**Open a tap. Connect directly.**
+**aitap it.** Open a direct line between any two agents.
 
-Like a walkie-talkie for AI agents.
+> *verb* — to establish a direct peer-to-peer connection
+> *"I needed Claude. So I aitapped it."*
 
 ---
 

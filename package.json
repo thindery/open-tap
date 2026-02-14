@@ -17,7 +17,11 @@
     "p2p": "node src/p2p.js",
     "relay": "node relay/server.js",
     "meetingpoint": "node meetingpoint/server.js",
-    "dev": "node relay/server.js"
+    "dev": "node relay/server.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage"
   },
   "keywords": [
     "websocket",
@@ -38,7 +42,8 @@
   },
   "homepage": "https://github.com/thindery/aitap#readme",
   "dependencies": {
-    "ws": "^8.14.2"
+    "ws": "^8.14.2",
+    "tweetnacl": "^1.0.3"
   },
   "optionalDependencies": {
     "localtunnel": "^2.0.2",
@@ -48,5 +53,9 @@
   },
   "engines": {
     "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^4.0.18",
+    "vitest": "^4.0.18"
   }
 }

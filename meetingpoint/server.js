@@ -14,16 +14,116 @@ const http = require('http');
 const PORT = process.env.PORT || 3001;
 const HEARTBEAT_INTERVAL = 30000;
 const PEER_TIMEOUT = 120000; // 2 minutes
+const RATE_LIMIT_WINDOW = 60000; // 1 minute
+const RATE_LIMIT_MAX = 100; // 100 requests per minute per IP
+const AUTH_FAILURE_MAX = 5; // Max failed auth attempts before backoff
+const AUTH_BACKOFF_MS = 30000; // 30 second backoff after auth failures
+const AUTH_RETRY_MULTIPLIER = 2; // Exponential backoff multiplier
 
 // Peer registry: guid -> { endpoint, lastSeen, pubkey }
 const peers = new Map();
 
+// Rate limiting: ip -> { count, resetTime, authFailures: number, backoffUntil: number }
+const rateLimits = new Map();
+
+/**
+ * Rate limiting module
+ */
+function checkRateLimit(ip) {
+  const now = Date.now();
+  let limit = rateLimits.get(ip);
+  
+  if (!limit) {
+    limit = { count: 1, resetTime: now + RATE_LIMIT_WINDOW, authFailures: 0, backoffUntil: 0 };
+    rateLimits.set(ip, limit);
+    return { allowed: true, remaining: RATE_LIMIT_MAX - 1 };
+  }
+  
+  // Check if in backoff period due to auth failures
+  if (limit.backoffUntil > now) {
+    return { allowed: false, remaining: 0, retryAfter: Math.ceil((limit.backoffUntil - now) / 1000) };
+  }
+  
+  // Reset if window expired
+  if (now > limit.resetTime) {
+    limit.count = 1;
+    limit.resetTime = now + RATE_LIMIT_WINDOW;
+    return { allowed: true, remaining: RATE_LIMIT_MAX - 1 };
+  }
+  
+  // Check against limit
+  if (limit.count >= RATE_LIMIT_MAX) {
+    return { allowed: false, remaining: 0, retryAfter: Math.ceil((limit.resetTime - now) / 1000) };
+  }
+  
+  limit.count++;
+  return { allowed: true, remaining: RATE_LIMIT_MAX - limit.count };
+}
+
+/**
+ * Record authentication failure for exponential backoff
+ */
+function recordAuthFailure(ip) {
+  const now = Date.now();
+  let limit = rateLimits.get(ip);
+  
+  if (!limit) {
+    limit = { count: 0, resetTime: now + RATE_LIMIT_WINDOW, authFailures: 1, backoffUntil: now + AUTH_BACKOFF_MS };
+    rateLimits.set(ip, limit);
+    return;
+  }
+  
+  limit.authFailures++;
+  const backoffMs = AUTH_BACKOFF_MS * Math.pow(AUTH_RETRY_MULTIPLIER, Math.min(limit.authFailures - 1, 5)); // Cap at 5th failure
+  limit.backoffUntil = now + backoffMs;
+}
+
+/**
+ * Clear rate limit for successful auth
+ */
+function clearAuthFailures(ip) {
+  const limit = rateLimits.get(ip);
+  if (limit) {
+    limit.authFailures = 0;
+    limit.backoffUntil = 0;
+  }
+}
+
+/**
+ * Get client IP from request
+ */
+function getClientIp(req) {
+  return req.headers['x-forwarded-for'] || 
+         req.socket.remoteAddress || 
+         'unknown';
+}
+
 // Create HTTP server
 const server = http.createServer((req, res) => {
-  // CORS headers
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  // Get client IP for rate limiting
+  const clientIp = getClientIp(req);
+  
+  // Check rate limit for HTTP requests
+  const rateCheck = checkRateLimit(clientIp);
+  if (!rateCheck.allowed) {
+    res.writeHead(429, { 
+      'Content-Type': 'application/json',
+      'Retry-After': rateCheck.retryAfter
+    });
+    res.end(JSON.stringify({ error: 'Rate limit exceeded', retryAfter: rateCheck.retryAfter }));
+    return;
+  }
+  
+  // CORS headers - restrict to same-origin only (no wildcards for WebSocket-only service)
+  const origin = req.headers.origin;
+  // Only allow same-origin or no origin (direct requests)
+  if (origin) {
+    // For a public server, you might want to allow specific origins
+    // Here we only allow same-origin direct requests
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  }
 
   if (req.method === 'OPTIONS') {
     res.writeHead(200);
@@ -93,15 +193,48 @@ function cleanupPeers() {
 
 setInterval(cleanupPeers, 30000);
 
+// Clean up old rate limit entries every hour
+setInterval(() => {
+  const now = Date.now();
+  for (const [ip, limit] of rateLimits.entries()) {
+    if (now > limit.resetTime + RATE_LIMIT_WINDOW) {
+      rateLimits.delete(ip);
+    }
+  }
+}, 3600000);
+
 // Handle connections
 wss.on('connection', (ws, req) => {
   ws.isAlive = true;
   let peerGuid = null;
+  const clientIp = getClientIp(req);
+  
+  // Check rate limit on connection
+  const rateCheck = checkRateLimit(clientIp);
+  if (!rateCheck.allowed) {
+    ws.send(JSON.stringify({
+      type: 'error',
+      message: `Rate limit exceeded. Retry after ${rateCheck.retryAfter}s`
+    }));
+    ws.close(1008, 'Rate limit exceeded');
+    return;
+  }
 
-  console.log(`[+] Rendezvous client connected (${wss.clients.size} total)`);
+  console.log(`[+] Rendezvous client connected (${wss.clients.size} total) from ${clientIp}`);
 
   ws.on('message', (data) => {
     try {
+      // Check rate limit on each message
+      const rateCheck = checkRateLimit(clientIp);
+      if (!rateCheck.allowed) {
+        ws.send(JSON.stringify({
+          type: 'error',
+          message: `Rate limit exceeded. Retry after ${rateCheck.retryAfter}s`
+        }));
+        ws.close(1008, 'Rate limit exceeded');
+        return;
+      }
+      
       const msg = JSON.parse(data);
 
       switch (msg.type) {
@@ -243,3 +376,6 @@ process.on('SIGINT', () => {
   console.log('\n[!] SIGINT received, shutting down');
   process.exit(0);
 });
+
+// Export for testing
+module.exports = { server, wss, rateLimits, checkRateLimit };
