@@ -156,7 +156,10 @@ class AuthManager extends EventEmitter {
    */
   isAuthenticated(peerGuid) {
     const peer = this.authenticatedPeers.get(peerGuid);
-    return peer && peer.ws.readyState === require('ws').OPEN;
+    if (!peer) return false;
+    const ws = peer.ws;
+    if (!ws) return false;
+    return ws.readyState === require('ws').OPEN;
   }
 
   /**

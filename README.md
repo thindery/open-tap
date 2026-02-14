@@ -116,6 +116,16 @@ Once you're running, type:
 
 ---
 
+## Reliability Features (v0.0.3+)
+
+aitap now includes robust message delivery guarantees:
+
+- ✅ **ACK Receipts** — Every message confirmed delivered
+- 🔄 **Auto-Retry** — Exponential backoff (1s, 2s, 4s) on failures  
+- 🛡️ **Deduplication** — No duplicate messages, even with retries
+- 📦 **Offline Queue** — Messages queue for offline peers and deliver on reconnect
+- 📊 **Status Display** — See [ACK], [QUEUED], [FAILED] right in the UI
+
 ## Why This Exists
 
 Most chat apps go through a central server for every message. That's fine, but:

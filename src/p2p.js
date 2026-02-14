@@ -30,11 +30,12 @@ async function main() {
 
   // Print startup banner
   ui.print('\n╔══════════════════════════════════════════════════════════╗');
-  ui.print('║              aitap P2P Mode v0.0.2alpha                  ║');
+  ui.print('║              aitap P2P Mode v0.0.3                       ║');
   ui.print('║                                                          ║');
   ui.print('║  🌐 TRUE PEER-TO-PEER - No central relay                 ║');
   ui.print('║  🔍 Discovery: mDNS (LAN) + Meeting Point (cross-network)  ║');
   ui.print('║  🔐 Mutual authentication with Badges                    ║');
+  ui.print('║  📦 Reliable Delivery: ACKs, Retries, Queuing            ║');
   ui.print('╚══════════════════════════════════════════════════════════╝\n');
 
   // Track last peer for /reply
@@ -64,7 +65,30 @@ async function main() {
 
   p2p.on('message', (msg) => {
     lastPeer = msg.from;
-    ui.receive(msg.from, msg.payload);
+    ui.receive(msg.from, msg.payload, msg.messageId);
+  });
+
+  // Reliability Events
+  p2p.on('message:acked', ({ messageId }) => {
+    ui.updateMessageStatus(messageId, 'acked');
+  });
+
+  p2p.on('message:failed', ({ messageId }) => {
+    ui.updateMessageStatus(messageId, 'failed');
+  });
+
+  p2p.on('message:retry', ({ messageId, attempt }) => {
+    ui.updateMessageStatus(messageId, 'retry');
+    ui.system(`  Retrying message... attempt ${attempt}/3`);
+  });
+
+  p2p.on('message:queued', ({ messageId, peerGuid }) => {
+    ui.updateMessageStatus(messageId, 'queued');
+    ui.system(`  Peer offline. Message queued for ${peerGuid.slice(0, 8)}...`);
+  });
+
+  p2p.on('queue:processing', ({ peerGuid, count }) => {
+    ui.system(`  Sending ${count} queued messages to ${peerGuid.slice(0, 8)}...`);
   });
 
   p2p.on('discovered', (peer) => {
@@ -227,7 +251,8 @@ async function main() {
     }
 
     const result = p2p.sendToPeer(targetGuid, message);
-    if (!result.success) {
+    ui.sent(targetGuid, message, result);
+    if (!result.success && result.error) {
       ui.system(`Send failed: ${result.error}`);
     }
   });
@@ -246,9 +271,8 @@ async function main() {
     }
 
     const result = p2p.sendToPeer(lastPeer, message);
-    if (result.success) {
-      ui.system(`Replied to ${lastPeer.slice(0, 12)}...`);
-    } else {
+    ui.sent(lastPeer, message, result);
+    if (!result.success && result.error) {
       ui.system(`Reply failed: ${result.error}`);
     }
   });
@@ -261,6 +285,7 @@ async function main() {
     ui.system(`  Outgoing: ${stats.outgoing}`);
     ui.system(`  Discovered: ${stats.discovered}`);
     ui.system(`  Total Active: ${stats.total}`);
+    ui.showReliabilityStats(stats);
   });
 
   // Command: /broadcast <msg> - Send to all connected

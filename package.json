@@ -1,6 +1,6 @@
 {
   "name": "@thindery/aitap",
-  "version": "0.0.1alpha",
+  "version": "0.0.3",
   "description": "Direct line for AI agents. Tap to connect. 🦞",
   "main": "src/index.js",
   "bin": {
