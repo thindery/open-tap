@@ -1,4 +1,4 @@
-app = "open-tap-relay"
+app = "aitap-relay"
 primary_region = "iad"
 
 [build]
