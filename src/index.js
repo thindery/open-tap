@@ -8,8 +8,18 @@ const { OpenTapClient } = require('./client');
 const { TerminalUI } = require('./ui');
 const { getIdentity } = require('./identity');
 
-// Default relay (local or from env)
-const RELAY_URL = process.env.OPEN_TAP_RELAY || 'ws://localhost:3000';
+// Parse arguments
+const args = process.argv.slice(2);
+const isHostMode = args.includes('--host');
+
+// Default relay (local, from env, or from argument)
+let RELAY_URL = process.env.OPEN_TAP_RELAY || 'ws://localhost:3000';
+
+// Check for relay URL in arguments (non-flag argument)
+const urlArg = args.find(arg => arg.startsWith('ws://') || arg.startsWith('wss://'));
+if (urlArg) {
+  RELAY_URL = urlArg;
+}
 
 async function main() {
   const ui = new TerminalUI();

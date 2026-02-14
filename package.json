@@ -6,11 +6,13 @@
   "bin": {
     "open-tap": "./src/index.js",
     "open-tap-relay": "./relay/server.js",
+    "open-tap-host": "./src/host.js",
     "tap": "./src/index.js"
   },
   "scripts": {
     "start": "node relay/server.js",
     "client": "node src/index.js",
+    "host": "node src/host.js",
     "relay": "node relay/server.js",
     "dev": "node relay/server.js"
   },
@@ -27,6 +29,10 @@
   "homepage": "https://github.com/thindery/open-tap#readme",
   "dependencies": {
     "ws": "^8.14.2"
+  },
+  "optionalDependencies": {
+    "ngrok": "^5.0.0-beta.2",
+    "localtunnel": "^2.0.2"
   },
   "engines": {
     "node": ">=18.0.0"
