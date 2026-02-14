@@ -7,16 +7,27 @@
     "open-tap": "./src/index.js",
     "open-tap-relay": "./relay/server.js",
     "open-tap-host": "./src/host.js",
-    "tap": "./src/index.js"
+    "open-tap-p2p": "./src/p2p.js",
+    "tap": "./src/index.js",
+    "tap-p2p": "./src/p2p.js"
   },
   "scripts": {
     "start": "node relay/server.js",
     "client": "node src/index.js",
     "host": "node src/host.js",
+    "p2p": "node src/p2p.js",
     "relay": "node relay/server.js",
+    "rendezvous": "node rendezvous/server.js",
     "dev": "node relay/server.js"
   },
-  "keywords": ["websocket", "relay", "bot", "messaging", "p2p", "agents"],
+  "keywords": [
+    "websocket",
+    "relay",
+    "bot",
+    "messaging",
+    "p2p",
+    "agents"
+  ],
   "author": "thindery",
   "license": "MIT",
   "repository": {
@@ -31,8 +42,9 @@
     "ws": "^8.14.2"
   },
   "optionalDependencies": {
-    "ngrok": "^5.0.0-beta.2",
     "localtunnel": "^2.0.2",
+    "multicast-dns": "npm:null@^9.0.1",
+    "ngrok": "^5.0.0-beta.2",
     "qrcode-terminal": "^0.12.0"
   },
   "engines": {
