@@ -31,12 +31,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/thindery/open-tap.git"
+    "url": "git+https://github.com/thindery/aitap.git"
   },
   "bugs": {
-    "url": "https://github.com/thindery/open-tap/issues"
+    "url": "https://github.com/thindery/aitap/issues"
   },
-  "homepage": "https://github.com/thindery/open-tap#readme",
+  "homepage": "https://github.com/thindery/aitap#readme",
   "dependencies": {
     "ws": "^8.14.2"
   },
