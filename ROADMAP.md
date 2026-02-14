@@ -10,28 +10,39 @@ Working demo you + friend can test. One message: "This is Remy. Are you there?"
 
 ---
 
-## Phase 2: TRUE P2P (ACTIVE NOW) 🔥
+## Phase 2: TRUE P2P ✅ COMPLETE
 
 ### Goal
 Remove central relay. Each node runs its own mini-relay, discovers peers via GUID, authenticates mutually, connects directly.
 
-### Spec
-- Each node broadcasts its GUID + endpoint (IP:port)
-- Nodes discover each other (mDNS for LAN, DHT/global for WAN)
-- Mutual auth via GUID exchange
-- Direct TCP connection (NAT hole punch or relay fallback)
-- No single point of failure
+### What Shipped
+✅ mDNS discovery (same WiFi auto-discovery)  
+✅ Mini-relay per node (each runs WebSocket server)  
+✅ GUID encodes connection info (uuid-ip-port)  
+✅ Rendezvous server for cross-network discovery  
+✅ `--rendezvous` flag for internet P2P  
+✅ Mutual auth handshake  
+✅ Direct P2P messaging  
 
-### Tasks
-| Day | Task | Owner | Status |
-|-----|------|-------|--------|
-| **Sat PM** | Peer discovery protocol (mDNS + broadcast) | Dev | 🔲 |
-| **Sat Night** | GUID = connection info encoding | Dev | 🔲 |
-| **Sun AM** | Mini-relay per node ( each runs server) | Dev | 🔲 |
-| **Sun PM** | Mutual auth handshake (GUID exchange) | Dev | 🔲 |
-| **Mon AM** | NAT hole punching (UDP/TCP) | Dev | 🔲 |
-| **Mon PM** | Fallback to relay if direct fails | Dev | 🔲 |
-| **Tue** | End-to-end test, two machines, two networks | QA | 🔲 |
+### Usage
+
+**Same WiFi (mDNS auto-discovery):**
+```bash
+tap --p2p
+/peers  # Auto-finds peers
+```
+
+**Cross-Network (rendezvous server):**
+```bash
+# You host the rendezvous
+tap-rendezvous  # or: npm run rendezvous
+
+# Both peers connect
+tap --p2p --rendezvous=wss://your-server:3001
+/peers  # Shows all peers on same rendezvous
+```
+
+**Next:** Deploy rendezvous to Fly.io for public coordination
 
 ### New Commands
 ```bash
