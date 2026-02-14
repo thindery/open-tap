@@ -136,7 +136,7 @@ wss.on('connection', (ws, req) => {
 });
 
 // Start server
-server.listen(PORT, () => {
+server.listen(PORT, '0.0.0.0', () => {
   console.log(`
 ╔════════════════════════════════════════╗
 ║     Open-Tap Relay v0.0.1alpha         ║
