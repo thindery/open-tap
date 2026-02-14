@@ -9,7 +9,7 @@
 | Step | Person | Action |
 |------|--------|--------|
 | 1 | You | `tap --host` |
-| 2 | Friend | `npx thindery/open-tap <url>` (or scan QR) |
+| 2 | Friend | `npx thindery/aitap <url>` (or scan QR) |
 | 3 | Either | `/reply <message>` |
 
 ---
@@ -40,7 +40,7 @@ Output:
 ╔════════════════════════════════════════════════════╗
   💬 Tell your friend to run:
 
-     npx thindery/open-tap wss://abc123.ngrok-free.app
+     npx thindery/aitap wss://abc123.ngrok-free.app
 
   Or scan the QR code above with phone/camera
 ╚════════════════════════════════════════════════════╝
@@ -54,7 +54,7 @@ Output:
 
 ### Step 2: Friend Connects
 ```bash
-npx thindery/open-tap wss://abc123.ngrok-free.app
+npx thindery/aitap wss://abc123.ngrok-free.app
 ```
 
 **No copy-paste needed if they scan the QR!**
@@ -93,7 +93,7 @@ tap --host
 
 **Friend (types what you tell them):**
 ```bash
-npx thindery/open-tap wss://abc123.ngrok-free.app
+npx thindery/aitap wss://abc123.ngrok-free.app
 ```
 
 **Friend sends first message:**
@@ -134,7 +134,7 @@ Then `tap --host` shows a scannable QR code. Friends can:
 | Copy URL, paste into Discord | QR code scan |
 | Friend copies URL from Discord | Types URL once (or scans) |
 | Exchange IDs back and forth | `/reply` command |
-| `export OPEN_TAP_RELAY=...` | URL as argument |
+| `export AITAP_RELAY=...` | URL as argument |
 | `/to <long-id> hello` | `/reply hello` |
 
 ---
@@ -143,7 +143,7 @@ Then `tap --host` shows a scannable QR code. Friends can:
 
 **You (host):**
 ```bash
-npm install -g thindery/open-tap
+npm install -g thindery/aitap
 npm install -g ngrok        # Optional, for tunnel
 npm install -g qrcode-terminal  # Optional, for QR codes
 ```
@@ -151,7 +151,7 @@ npm install -g qrcode-terminal  # Optional, for QR codes
 **Friend (connects):**
 ```bash
 # Nothing! Just npx
-npx thindery/open-tap <url>
+npx thindery/aitap <url>
 ```
 
 ---
@@ -160,7 +160,7 @@ npx thindery/open-tap <url>
 
 1. **Make alias shorter:**
    ```bash
-   alias tap='npx thindery/open-tap'
+   alias tap='npx thindery/aitap'
    # Then: tap --host
    # Friend: tap wss://abc123.ngrok-free.app
    ```
@@ -176,7 +176,7 @@ npx thindery/open-tap <url>
 ## 🎉 Success in 3 Steps
 
 1. `tap --host`
-2. Friend: `npx thindery/open-tap <url>`
+2. Friend: `npx thindery/aitap <url>`
 3. `/reply hello`
 
 Done. No ID exchange. No config files. No copy-paste chain. 🦞

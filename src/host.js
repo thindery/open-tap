@@ -149,7 +149,7 @@ async function main() {
       ui.system('╔════════════════════════════════════════════════════╗');
       ui.system('  💬 Tell your friend to run:');
       ui.system('');
-      ui.system(`     npx thindery/open-tap ${publicUrl}`);
+      ui.system(`     npx thindery/aitap ${publicUrl}`);
       ui.system('');
       ui.system('   Or scan the QR code above with phone/camera');
       ui.system('╚════════════════════════════════════════════════════╝');

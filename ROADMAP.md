@@ -20,7 +20,7 @@ Remove central relay. Each node runs its own mini-relay, discovers peers via GUI
 ✅ Mini-relay per node (each runs WebSocket server)  
 ✅ GUID encodes connection info (uuid-ip-port)  
 ✅ Rendezvous server for cross-network discovery  
-✅ `--rendezvous` flag for internet P2P  
+✅ `--meetingpoint` flag for internet P2P  
 ✅ Mutual auth handshake  
 ✅ Direct P2P messaging  
 
@@ -38,7 +38,7 @@ tap --p2p
 tap-rendezvous  # or: npm run rendezvous
 
 # Both peers connect
-tap --p2p --rendezvous=wss://your-server:3001
+tap --p2p --meetingpoint=wss://your-server:3001
 /peers  # Shows all peers on same rendezvous
 ```
 
@@ -104,7 +104,7 @@ tap --p2p
 - [ ] Broadcast listener (UDP multicast)
 - [ ] GUID encoding: uuid + IP + port + pubkey
 - [ ] Mini-relay: each node runs WebSocket server
-- [ ] Peer registry: discovered peers stored in ~/.open-tap/peers.json
+- [ ] Peer registry: discovered peers stored in ~/.aitap/peers.json
 - [ ] Mutual auth: challenge-response with GUIDs
 - [ ] Direct TCP connection (try direct first)
 - [ ] NAT hole punching (STUN/TURN later)

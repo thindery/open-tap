@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 /**
- * Open-Tap P2P Mode
+ * aitap P2P Mode
  * Entry point for peer-to-peer operation
  * 
  * Usage: 
- *   tap --p2p                    # Local mDNS discovery only
- *   tap --p2p --rendezvous=URL   # Use rendezvous server for cross-network
+ *   aitap --p2p                    # Local mDNS discovery only
+ *   aitap --p2p --meetingpoint=URL   # Use meeting point for cross-network
  */
 
 const { P2PClient } = require('./p2p-client');
@@ -18,9 +18,9 @@ const args = process.argv.slice(2);
 const portArg = args.find(arg => /^\d+$/.test(arg));
 const PORT = portArg ? parseInt(portArg, 10) : 0; // 0 = auto-assign
 
-const RENDEZVOUS_ARG = args.find(arg => arg.startsWith('--rendezvous='));
-const RENDEZVOUS_URL = RENDEZVOUS_ARG ? RENDEZVOUS_ARG.split('=')[1] : 
-                       process.env.OPEN_TAP_RENDEZVOUS ||
+const MEETINGPOINT_ARG = args.find(arg => arg.startsWith('--meetingpoint='));
+const MEETINGPOINT_URL = MEETINGPOINT_ARG ? MEETINGPOINT_ARG.split('=')[1] : 
+                       process.env.AITAP_MEETINGPOINT ||
                        null;
 
 async function main() {
@@ -30,11 +30,11 @@ async function main() {
 
   // Print startup banner
   ui.print('\n╔══════════════════════════════════════════════════════════╗');
-  ui.print('║           Open-Tap P2P Mode v0.0.2alpha                  ║');
+  ui.print('║              aitap P2P Mode v0.0.2alpha                  ║');
   ui.print('║                                                          ║');
   ui.print('║  🌐 TRUE PEER-TO-PEER - No central relay                 ║');
-  ui.print('║  🔍 Discovery: mDNS (LAN) + Rendezvous (cross-network)   ║');
-  ui.print('║  🔐 Mutual authentication with GUIDs                     ║');
+  ui.print('║  🔍 Discovery: mDNS (LAN) + Meeting Point (cross-network)  ║');
+  ui.print('║  🔐 Mutual authentication with Badges                    ║');
   ui.print('╚══════════════════════════════════════════════════════════╝\n');
 
   // Track last peer for /reply
@@ -46,8 +46,8 @@ async function main() {
     ui.system(`   My GUID: ${info.guid}`);
     ui.system(`   Endpoint: ${info.endpoint}`);
     
-    if (RENDEZVOUS_URL) {
-      ui.system(`   Rendezvous: ${RENDEZVOUS_URL}`);
+    if (MEETINGPOINT_URL) {
+      ui.system(`   Rendezvous: ${MEETINGPOINT_URL}`);
     } else if (!info.discovery) {
       ui.system('   ⚠️  mDNS discovery unavailable (install multicast-dns)');
     }
@@ -56,7 +56,7 @@ async function main() {
     ui.system('   Commands:');
     ui.system('     /id    - Show your GUID');
     ui.system('     /peers - List discovered peers');
-    if (!RENDEZVOUS_URL) {
+    if (!MEETINGPOINT_URL) {
       ui.system('     /add-peer <guid> - Add peer manually for cross-network');
     }
     ui.system('');
@@ -94,12 +94,12 @@ async function main() {
   const myInfo = p2p.getInfo();
 
   // Connect to rendezvous if specified
-  if (RENDEZVOUS_URL) {
+  if (MEETINGPOINT_URL) {
     ui.system(`🌍 Connecting to rendezvous server...`);
     
     try {
       rendezvous = new RendezvousClient(
-        RENDEZVOUS_URL,
+        MEETINGPOINT_URL,
         myInfo.guid,
         myInfo.endpoint
       );
@@ -129,8 +129,8 @@ async function main() {
     ui.system('My P2P Info:');
     ui.system(`  GUID: ${info.guid}`);
     ui.system(`  Endpoint: ${info.endpoint}`);
-    if (RENDEZVOUS_URL) {
-      ui.system(`  Rendezvous: ${RENDEZVOUS_URL}`);
+    if (MEETINGPOINT_URL) {
+      ui.system(`  Rendezvous: ${MEETINGPOINT_URL}`);
     }
     ui.system(`\n  Share this GUID with peers on different networks:`);
     ui.system(`  ${info.guid}`);
@@ -145,7 +145,7 @@ async function main() {
     
     if (peers.length === 0) {
       ui.system('  No peers yet.');
-      if (RENDEZVOUS_URL) {
+      if (MEETINGPOINT_URL) {
         ui.system('  Waiting for peers on same rendezvous server...');
       } else {
         ui.system('  Discovery takes 5-10 seconds on same WiFi.');

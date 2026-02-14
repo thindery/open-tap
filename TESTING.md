@@ -22,7 +22,7 @@ Across different WiFi networks. No SSH, no port forwarding, no VPN.
 ### You Need
 
 - [ ] Node.js 18+ installed
-- [ ] This code downloaded (`~/projects/open-tap`)
+- [ ] This code downloaded (`~/projects/aitap`)
 - [ ] Dependencies installed (`npm install`)
 - [ ] A way to send your relay URL to friend (Discord, text, etc.)
 
@@ -52,7 +52,7 @@ brew install ngrok
 
 Terminal 1:
 ```bash
-cd ~/projects/open-tap
+cd ~/projects/aitap
 npm run relay
 ```
 
@@ -79,7 +79,7 @@ Forwarding                    https://abc123-def456.ngrok-free.app -> http://loc
 
 Terminal 3:
 ```bash
-export OPEN_TAP_RELAY=wss://abc123-def456.ngrok-free.app
+export AITAP_RELAY=wss://abc123-def456.ngrok-free.app
 npm run client
 ```
 
@@ -99,7 +99,7 @@ Hey! Test Open-Tap with me.
 
 1. Download: [send them the code]
 2. Run: npm install
-3. Run: export OPEN_TAP_RELAY=wss://abc123-def456.ngrok-free.app
+3. Run: export AITAP_RELAY=wss://abc123-def456.ngrok-free.app
 4. Run: npm run client
 5. When you connect, tell me your client ID
 6. I'll send you a message!
@@ -131,7 +131,7 @@ ngrok URL changes every restart. Deploy to Fly.io for a permanent URL.
 ### Deploy
 
 ```bash
-cd ~/projects/open-tap
+cd ~/projects/aitap
 fly launch --no-deploy
 fly deploy
 ```
@@ -142,7 +142,7 @@ You'll get: `wss://your-app-name.fly.dev`
 
 **Both of you:**
 ```bash
-export OPEN_TAP_RELAY=wss://your-app-name.fly.dev
+export AITAP_RELAY=wss://your-app-name.fly.dev
 npm run client
 ```
 
@@ -172,7 +172,7 @@ Router admin → Port Forwarding → Add rule:
 ### Step 3: Test
 
 ```bash
-export OPEN_TAP_RELAY=ws://YOUR-PUBLIC-IP:3000
+export AITAP_RELAY=ws://YOUR-PUBLIC-IP:3000
 npm run client
 ```
 
@@ -186,18 +186,18 @@ npm run client
 
 Push to GitHub:
 ```bash
-cd ~/projects/open-tap
+cd ~/projects/aitap
 git init
 git add .
 git commit -m "v0.0.1alpha"
-git remote add origin https://github.com/YOURNAME/open-tap.git
+git remote add origin https://github.com/YOURNAME/aitap.git
 git push -u origin main
 ```
 
 Tell friend:
 ```bash
-git clone https://github.com/YOURNAME/open-tap.git
-cd open-tap
+git clone https://github.com/YOURNAME/aitap.git
+cd aitap
 npm install
 ```
 
@@ -205,15 +205,15 @@ npm install
 
 ```bash
 cd ~/projects
-zip -r open-tap.zip open-tap
+zip -r aitap.zip aitap
 ```
 
-Send `open-tap.zip` via Discord/Dropbox/etc.
+Send `aitap.zip` via Discord/Dropbox/etc.
 
 Friend:
 ```bash
-unzip open-tap.zip
-cd open-tap
+unzip aitap.zip
+cd aitap
 npm install
 ```
 
@@ -224,13 +224,13 @@ npm install
 **You:**
 1. Start relay: `npm run relay`
 2. Start ngrok or deploy
-3. Connect client: `export OPEN_TAP_RELAY=<url> && npm run client`
+3. Connect client: `export AITAP_RELAY=<url> && npm run client`
 4. Send friend the relay URL and your ID
 
 **Friend:**
 1. Download code
 2. Run: `npm install`
-3. Connect: `export OPEN_TAP_RELAY=<your-url> && npm run client`
+3. Connect: `export AITAP_RELAY=<your-url> && npm run client`
 4. Tell you their client ID
 
 **Both:**

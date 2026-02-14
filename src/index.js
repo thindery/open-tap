@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Open-Tap Client v0.0.1alpha
+ * aitap Client v0.0.1alpha
  * Terminal client for relay messaging
  * 
  * Modes:
@@ -35,7 +35,7 @@ async function main() {
 // ============================================================================
 async function runRelayMode() {
   // Default relay (local, from env, or from argument)
-  let RELAY_URL = process.env.OPEN_TAP_RELAY || 'ws://localhost:3000';
+  let RELAY_URL = process.env.AITAP_RELAY || 'ws://localhost:3000';
 
   // Check for relay URL in arguments (non-flag argument)
   const urlArg = args.find(arg => arg.startsWith('ws://') || arg.startsWith('wss://'));
@@ -50,7 +50,7 @@ async function runRelayMode() {
   let lastPeer = null;
 
   ui.print('\n╔════════════════════════════════════════╗');
-  ui.print('║     Open-Tap Client v0.0.1alpha        ║');
+  ui.print('║        aitap Client v0.0.1alpha        ║');
   ui.print('║                                        ║');
   ui.print(`║  Identity: ${getIdentity().slice(0, 16)}...       ║`);
   ui.print(`║  Relay: ${RELAY_URL.slice(0, 28).padEnd(28)}  ║`);
@@ -175,7 +175,7 @@ async function runRelayMode() {
     ui.system('Or use --p2p flag for TRUE peer-to-peer mode');
   } catch (err) {
     ui.system(`Connection failed: ${err.message}`);
-    ui.system('Is the relay running? Set OPEN_TAP_RELAY to change server.');
+    ui.system('Is the relay running? Set AITAP_RELAY to change server.');
     ui.stop();
     process.exit(1);
   }

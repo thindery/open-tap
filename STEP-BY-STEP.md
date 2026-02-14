@@ -32,7 +32,7 @@ ngrok gives you a public URL instantly. No deployment. No account needed (free t
 
 **Step 1: Install Open-Tap**
 ```bash
-npm install -g thindery/open-tap
+npm install -g thindery/aitap
 ```
 
 **Step 2: Install ngrok**
@@ -43,7 +43,7 @@ brew install ngrok
 
 **Step 3: Start the Relay**
 ```bash
-open-tap-relay
+aitap-relay
 ```
 
 You'll see:
@@ -71,7 +71,7 @@ Forwarding  https://abc123-def456.ngrok-free.app -> http://localhost:3000
 
 **Step 5: Connect Your Client**
 ```bash
-export OPEN_TAP_RELAY=wss://abc123-def456.ngrok-free.app
+export AITAP_RELAY=wss://abc123-def456.ngrok-free.app
 tap
 ```
 
@@ -92,14 +92,14 @@ Message them:
 ```
 Hey! Test this with me:
 
-1. Install: npm install -g thindery/open-tap
-2. Connect: export OPEN_TAP_RELAY=wss://[YOUR-NGROK-URL]
+1. Install: npm install -g thindery/aitap
+2. Connect: export AITAP_RELAY=wss://[YOUR-NGROK-URL]
 3. Run: tap
 4. Tell me your client ID (shown when you connect)
 5. I'll send you a message!
 
 Example:
-export OPEN_TAP_RELAY=wss://abc123-def456.ngrok-free.app
+export AITAP_RELAY=wss://abc123-def456.ngrok-free.app
 tap
 ```
 
@@ -109,18 +109,18 @@ tap
 
 **Step 1: Install Open-Tap**
 ```bash
-npm install -g thindery/open-tap
+npm install -g thindery/aitap
 ```
 
 **Step 2: Connect to Your Relay**
 ```bash
-export OPEN_TAP_RELAY=wss://[THE-URL-PERSON-A-SENT-YOU]
+export AITAP_RELAY=wss://[THE-URL-PERSON-A-SENT-YOU]
 tap
 ```
 
 Example:
 ```bash
-export OPEN_TAP_RELAY=wss://abc123-def456.ngrok-free.app
+export AITAP_RELAY=wss://abc123-def456.ngrok-free.app
 tap
 ```
 
@@ -173,8 +173,8 @@ ngrok URLs change every time you restart. For a permanent URL, deploy to Fly.io.
 
 **Step 2: One-Command Deploy**
 ```bash
-# This uses the open-tap Docker image
-fly launch --image thindery/open-tap --no-deploy
+# This uses the aitap Docker image
+fly launch --image thindery/aitap --no-deploy
 fly deploy
 ```
 
@@ -195,14 +195,14 @@ Your relay URL is: `wss://your-app.fly.dev`
 
 **Person A (You):**
 ```bash
-export OPEN_TAP_RELAY=wss://your-app.fly.dev
+export AITAP_RELAY=wss://your-app.fly.dev
 tap
 # Save your ID
 ```
 
 **Person B (Friend):**
 ```bash
-export OPEN_TAP_RELAY=wss://your-app.fly.dev
+export AITAP_RELAY=wss://your-app.fly.dev
 tap
 # Save your ID, tell Person A
 ```
@@ -215,8 +215,8 @@ tap
 
 | Person | Installs | Runs | Shares |
 |--------|----------|------|--------|
-| **A (You)** | `npm install -g thindery/open-tap` | `open-tap-relay` + `ngrok http 3000` | ngrok URL + their client ID |
-| **B (Friend)** | `npm install -g thindery/open-tap` | `export OPEN_TAP_RELAY=<url> && tap` | Their client ID |
+| **A (You)** | `npm install -g thindery/aitap` | `aitap-relay` + `ngrok http 3000` | ngrok URL + their client ID |
+| **B (Friend)** | `npm install -g thindery/aitap` | `export AITAP_RELAY=<url> && tap` | Their client ID |
 
 **Then:** `/to <other-person-id> This is Remy. Are you there?`
 
@@ -243,12 +243,12 @@ Once `tap` is running:
 
 ### "Cannot find module 'ws'"
 ```bash
-npm install -g thindery/open-tap
+npm install -g thindery/aitap
 # This installs dependencies automatically
 ```
 
 ### "Connection refused" or "ECONNREFUSED"
-- Is the relay running? (`open-tap-relay` in another terminal)
+- Is the relay running? (`aitap-relay` in another terminal)
 - Is ngrok running? (`ngrok http 3000`)
 - Did you use the right URL? (must be `wss://` not `https://`)
 
@@ -264,7 +264,7 @@ npm install -g thindery/open-tap
 
 ### "Command not found: tap"
 ```bash
-npm install -g thindery/open-tap
+npm install -g thindery/aitap
 # Make sure global npm packages are in your PATH
 ```
 

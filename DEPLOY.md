@@ -8,7 +8,7 @@
 
 - Fly.io account: [sign up free](https://fly.io)
 - Fly CLI installed: `brew install flyctl`
-- Open-Tap code ready in `~/projects/open-tap`
+- Open-Tap code ready in `~/projects/aitap`
 
 ---
 
@@ -25,12 +25,12 @@ Opens browser, authenticate.
 ### Step 2: Launch App
 
 ```bash
-cd ~/projects/open-tap
+cd ~/projects/aitap
 fly launch --no-deploy
 ```
 
 This creates the app but doesn't deploy yet. You'll be asked:
-- App name: (suggest `open-tap-relay` or hit enter for random)
+- App name: (suggest `aitap-relay` or hit enter for random)
 - Region: pick closest to you
 
 ### Step 3: Deploy
@@ -47,14 +47,14 @@ Wait 2-3 minutes. You'll see build progress.
 fly status
 ```
 
-Shows: `https://open-tap-relay.fly.dev`
+Shows: `https://aitap-relay.fly.dev`
 
-**Your relay URL is:** `wss://open-tap-relay.fly.dev` (note: `wss://` not `https://`)
+**Your relay URL is:** `wss://aitap-relay.fly.dev` (note: `wss://` not `https://`)
 
 ### Step 5: Test Health
 
 ```bash
-curl https://open-tap-relay.fly.dev/health
+curl https://aitap-relay.fly.dev/health
 ```
 
 Should return: `{"status":"ok","clients":0}`
@@ -66,7 +66,7 @@ Should return: `{"status":"ok","clients":0}`
 ### Connect Client
 
 ```bash
-export OPEN_TAP_RELAY=wss://open-tap-relay.fly.dev
+export AITAP_RELAY=wss://aitap-relay.fly.dev
 npm run client
 ```
 
@@ -74,7 +74,7 @@ npm run client
 
 Send them:
 ```
-export OPEN_TAP_RELAY=wss://open-tap-relay.fly.dev
+export AITAP_RELAY=wss://aitap-relay.fly.dev
 npm run client
 ```
 
@@ -119,7 +119,7 @@ fly scale count 2  # Run 2 instances
 ### Destroy (clean up)
 
 ```bash
-fly destroy open-tap-relay
+fly destroy aitap-relay
 ```
 
 ---
@@ -130,7 +130,7 @@ fly destroy open-tap-relay
 fly certs add relay.yourdomain.com
 ```
 
-Then update DNS CNAME to point to `open-tap-relay.fly.dev`.
+Then update DNS CNAME to point to `aitap-relay.fly.dev`.
 
 ---
 

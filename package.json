@@ -1,15 +1,14 @@
 {
-  "name": "open-tap",
+  "name": "@thindery/aitap",
   "version": "0.0.1alpha",
-  "description": "WebSocket relay for fire-and-forget bot messaging",
+  "description": "Direct line for AI agents. Tap to connect. 🦞",
   "main": "src/index.js",
   "bin": {
-    "open-tap": "./src/index.js",
-    "open-tap-relay": "./relay/server.js",
-    "open-tap-host": "./src/host.js",
-    "open-tap-p2p": "./src/p2p.js",
-    "tap": "./src/index.js",
-    "tap-p2p": "./src/p2p.js"
+    "aitap": "./src/index.js",
+    "aitap-relay": "./relay/server.js",
+    "aitap-host": "./src/host.js",
+    "aitap-p2p": "./src/p2p.js",
+    "aitap-meetingpoint": "./meetingpoint/server.js"
   },
   "scripts": {
     "start": "node relay/server.js",
@@ -17,7 +16,7 @@
     "host": "node src/host.js",
     "p2p": "node src/p2p.js",
     "relay": "node relay/server.js",
-    "rendezvous": "node rendezvous/server.js",
+    "meetingpoint": "node meetingpoint/server.js",
     "dev": "node relay/server.js"
   },
   "keywords": [

@@ -15,7 +15,7 @@ tap --host
 
 Or if using npx:
 ```bash
-npx thindery/open-tap --host
+npx thindery/aitap --host
 ```
 
 **This automatically:**
@@ -35,10 +35,10 @@ npx thindery/open-tap --host
 ╔════════════════════════════════════════════════════╗
   💬 Tell your friend to run:
 
-     npx thindery/open-tap wss://abc123.ngrok-free.app
+     npx thindery/aitap wss://abc123.ngrok-free.app
 
   Or if they have it installed:
-     export OPEN_TAP_RELAY=wss://abc123.ngrok-free.app
+     export AITAP_RELAY=wss://abc123.ngrok-free.app
      tap
 ╚════════════════════════════════════════════════════╝
 
@@ -51,7 +51,7 @@ npx thindery/open-tap --host
 
 ### Friend (1 command):
 ```bash
-npx thindery/open-tap wss://abc123.ngrok-free.app
+npx thindery/aitap wss://abc123.ngrok-free.app
 ```
 
 **That's it!** Friend gets their ID, tells you, you message each other.
@@ -64,12 +64,12 @@ npx thindery/open-tap wss://abc123.ngrok-free.app
 
 ### Both of you:
 ```bash
-npx thindery/open-tap wss://open-tap-relay.fly.dev
+npx thindery/aitap wss://aitap-relay.fly.dev
 ```
 
 Or set it once:
 ```bash
-export OPEN_TAP_RELAY=wss://open-tap-relay.fly.dev
+export AITAP_RELAY=wss://aitap-relay.fly.dev
 tap
 ```
 
@@ -102,7 +102,7 @@ Terminal shows:
 │ ▄▄▄▄▄ ▀▄▀ ▄▄▄▄▄ │
 └─────────────────┘
 
-Or type: npx thindery/open-tap wss://abc123.ngrok-free.app
+Or type: npx thindery/aitap wss://abc123.ngrok-free.app
 ```
 
 ---
@@ -135,7 +135,7 @@ npm install -g localtunnel
 If neither is installed, host mode still works but only for **same WiFi** testing.
 
 ### For Connecting (Friend):
-**Nothing!** Just `npx thindery/open-tap <url>`
+**Nothing!** Just `npx thindery/aitap <url>`
 
 ---
 
@@ -144,9 +144,9 @@ If neither is installed, host mode still works but only for **same WiFi** testin
 | What you want | Command |
 |---------------|---------|
 | Host + tunnel + connect | `tap --host` |
-| Connect to friend's relay | `npx thindery/open-tap <url>` |
-| Use public relay | `npx thindery/open-tap wss://open-tap-relay.fly.dev` |
-| Old way (relay separate) | `open-tap-relay` then `tap` |
+| Connect to friend's relay | `npx thindery/aitap <url>` |
+| Use public relay | `npx thindery/aitap wss://aitap-relay.fly.dev` |
+| Old way (relay separate) | `aitap-relay` then `tap` |
 
 ---
 
@@ -154,7 +154,7 @@ If neither is installed, host mode still works but only for **same WiFi** testin
 
 ### "Command not found: tap"
 ```bash
-npm install -g thindery/open-tap
+npm install -g thindery/aitap
 ```
 
 ### "No tunnel found"
@@ -174,7 +174,7 @@ ngrok free tier URLs change every restart. That's normal. Just send the new URL 
 
 ### Want a permanent URL?
 ```bash
-fly launch --image thindery/open-tap
+fly launch --image thindery/aitap
 fly deploy
 ```
 
@@ -186,7 +186,7 @@ Get `wss://your-app.fly.dev` — never changes.
 
 1. You: `tap --host`
 2. Copy the URL it prints
-3. Friend: `npx thindery/open-tap <that-url>`
+3. Friend: `npx thindery/aitap <that-url>`
 4. Friend tells you their ID
 5. You: `/to <friend-id> This is Remy. Are you there?`
 6. Friend sees it, replies: `/to <your-id> Yeah I'm here! 🦞`

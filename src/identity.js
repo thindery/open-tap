@@ -7,7 +7,7 @@ const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
 
-const ID_FILE = path.join(process.env.HOME || process.env.USERPROFILE, '.open-tap-id');
+const ID_FILE = path.join(process.env.HOME || process.env.USERPROFILE, '.aitap-id');
 
 /**
  * Generate a new GUID

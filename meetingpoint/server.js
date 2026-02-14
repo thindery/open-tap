@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Open-Tap Rendezvous Server
+ * aitap Meeting Point
  * Tiny coordination server for P2P discovery across networks
  * 
  * Peers announce: "I'm GUID X at endpoint Y"
