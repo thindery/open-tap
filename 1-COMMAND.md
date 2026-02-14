@@ -1,76 +1,50 @@
-# 1-Command Setup (Super Simple Mode)
+# 1-Command Setup (SUPER SIMPLE MODE)
 
-**Goal:** Run one command, get connected, exchange messages.
-
-Two options:
-- **Option 1:** Use public relay (fastest, 30 seconds)
-- **Option 2:** Your own relay with auto-tunnel (2 minutes, more private)
+**Run one command, get connected, exchange messages.**
 
 ---
 
-## Option 1: Public Relay (EASIEST)
+## 🚀 The Easiest Way: Host Mode
 
-**No setup. No ngrok. No deploy.** Both people use the same public relay.
-
-### You:
-```bash
-npx thindery/open-tap
-```
-
-**That's it.** You'll see:
-```
-🔥 Open-Tap Client v0.0.1alpha
-📋 Your ID: a7f3-9d2e-b1c8-4d5e
-🔗 Using relay: wss://open-tap-relay.fly.dev
-
-> Send this to your friend:
->   npx thindery/open-tap wss://open-tap-relay.fly.dev
->
-> Then tell them your ID: a7f3-9d2e-b1c8-4d5e
-```
-
-### Friend:
-```bash
-npx thindery/open-tap wss://open-tap-relay.fly.dev
-```
-
-Friend sees their ID, tells you.
-
-### Exchange:
-```
-/to <friend-id> This is Remy. Are you there?
-```
-
-**Done.** 🎉
-
----
-
-## Option 2: Your Own Relay (Private)
-
-**You run the relay + auto-tunnel. Friend just connects.**
+You run one command that starts **everything**: relay server, public tunnel, and client.
 
 ### You (1 command):
+```bash
+tap --host
+```
+
+Or if using npx:
 ```bash
 npx thindery/open-tap --host
 ```
 
-This does everything:
-- Starts relay on your machine
-- Auto-tunnels with ngrok (if installed) or localtunnel
-- Prints shareable URL
-- Connects your client
-- Shows your ID
+**This automatically:**
+- ✅ Starts relay server on your machine
+- ✅ Creates public tunnel (uses ngrok if installed, or localtunnel)
+- ✅ Connects your client
+- ✅ Shows your client ID
+- ✅ Prints the exact command for your friend
 
 **Output:**
 ```
-🚀 Starting your private relay...
-📡 Relay running on port 3000
-🌍 Public URL: wss://abc123.ngrok-free.app
-🔥 Open-Tap Client v0.0.1alpha
-📋 Your ID: a7f3-9d2e-b1c8-4d5e
+🚀 Starting relay server...
+✅ Relay running on port 3000
+🌍 Creating public tunnel...
+✅ Tunnel ready: wss://abc123.ngrok-free.app
 
-💬 Tell your friend to run:
-   npx thindery/open-tap wss://abc123.ngrok-free.app
+╔════════════════════════════════════════════════════╗
+  💬 Tell your friend to run:
+
+     npx thindery/open-tap wss://abc123.ngrok-free.app
+
+  Or if they have it installed:
+     export OPEN_TAP_RELAY=wss://abc123.ngrok-free.app
+     tap
+╚════════════════════════════════════════════════════╝
+
+🔥 Connecting client to relay...
+✅ Connected! Your ID: a7f3-9d2e-b1c8-4d5e
+💡 Share this ID with your friend
 
 > 
 ```
@@ -80,25 +54,42 @@ This does everything:
 npx thindery/open-tap wss://abc123.ngrok-free.app
 ```
 
-Friend sees their ID, tells you.
-
-### Exchange:
-```
-/to <friend-id> This is Remy. Are you there?
-```
+**That's it!** Friend gets their ID, tells you, you message each other.
 
 ---
 
-## The Dream: QR Code Discovery
+## 🌍 Alternative: Use a Public Relay
 
-**Future version (v0.2.0+):**
+**If you don't want to host,** use a shared public relay:
+
+### Both of you:
+```bash
+npx thindery/open-tap wss://open-tap-relay.fly.dev
+```
+
+Or set it once:
+```bash
+export OPEN_TAP_RELAY=wss://open-tap-relay.fly.dev
+tap
+```
+
+**Notes:**
+- Public relay = anyone can connect
+- Messages still only go to specific IDs
+- Free tier, may have rate limits
+
+---
+
+## 📱 The Dream: QR Code (Future)
+
+**Coming in v0.2.0:**
 
 ### You:
 ```bash
-npx thindery/open-tap
+tap --host
 ```
 
-Terminal shows QR code:
+Terminal shows:
 ```
 🔥 Open-Tap Client v0.0.1alpha
 📋 Your ID: a7f3-9d2e-b1c8-4d5e
@@ -110,64 +101,94 @@ Terminal shows QR code:
 │ █▄▄▄█ █▄▀ █▄▄▄█ │
 │ ▄▄▄▄▄ ▀▄▀ ▄▄▄▄▄ │
 └─────────────────┘
+
+Or type: npx thindery/open-tap wss://abc123.ngrok-free.app
 ```
 
-### Friend:
-Scans QR with phone → auto-connects, or types URL shown below QR.
+---
+
+## 🎮 Commands
+
+Once connected, type:
+
+| Command | Action |
+|---------|--------|
+| `/to <id> <msg>` | Send message to specific ID |
+| `/broadcast <msg>` | Send to everyone |
+| `/id` | Show your ID |
+| `/help` | Show all commands |
+| `/quit` | Exit |
 
 ---
 
-## Implementation Notes
+## 🔧 Prerequisites
 
-**What needs to be built:**
-
-1. **Auto-tunnel detection:**
-   ```javascript
-   // Try ngrok first
-   const ngrok = await import('ngrok');
-   const url = await ngrok.connect(3000);
-   
-   // Fallback to localtunnel
-   const localtunnel = await import('localtunnel');
-   const tunnel = await localtunnel({ port: 3000 });
-   ```
-
-2. **npx support:** Repo needs proper `bin` entries (already done ✅)
-
-3. **`--host` flag:** When present, start relay + tunnel + client in one process
-
-4. **URL argument:** `npx open-tap <relay-url>` connects to specific relay
-
-5. **QR code:** `qrcode` npm package for terminal QR codes
-
----
-
-## Current Status vs Dream
-
-| Feature | Current | 1-Command Goal |
-|---------|---------|----------------|
-| Install | `npm install -g` | `npx` (no install) |
-| Start relay | `open-tap-relay` | `--host` flag |
-| Tunnel | Manual ngrok | Auto-detect + auto-start |
-| Connect | Set env var + run | URL as argument |
-| Share | Copy-paste ID | QR code scan |
-
----
-
-## Quick Win: npx Support Now
-
-Already works:
+### For Host Mode (You):
 ```bash
-# Connect to public relay
-npx thindery/open-tap
+# Option A: ngrok (recommended)
+npm install -g ngrok
 
-# Connect to specific relay  
-npx thindery/open-tap wss://your-relay.fly.dev
+# Option B: localtunnel (pure JS, no account)
+npm install -g localtunnel
 ```
 
-**To make Option 2 work** (relay + tunnel + client in one), need to add:
-1. `--host` flag to start relay
-2. Auto-tunnel integration
-3. Combine relay + client in single process
+If neither is installed, host mode still works but only for **same WiFi** testing.
 
-**Want me to build the 1-command version?** (~1 hour) 🦞
+### For Connecting (Friend):
+**Nothing!** Just `npx thindery/open-tap <url>`
+
+---
+
+## 📝 Quick Reference
+
+| What you want | Command |
+|---------------|---------|
+| Host + tunnel + connect | `tap --host` |
+| Connect to friend's relay | `npx thindery/open-tap <url>` |
+| Use public relay | `npx thindery/open-tap wss://open-tap-relay.fly.dev` |
+| Old way (relay separate) | `open-tap-relay` then `tap` |
+
+---
+
+## ❓ Troubleshooting
+
+### "Command not found: tap"
+```bash
+npm install -g thindery/open-tap
+```
+
+### "No tunnel found"
+Install ngrok:
+```bash
+npm install -g ngrok
+# Or: brew install ngrok
+```
+
+Or use localtunnel:
+```bash
+npm install -g localtunnel
+```
+
+### Tunnel URL changes on restart
+ngrok free tier URLs change every restart. That's normal. Just send the new URL to your friend, or **deploy to Fly.io** for a permanent URL.
+
+### Want a permanent URL?
+```bash
+fly launch --image thindery/open-tap
+fly deploy
+```
+
+Get `wss://your-app.fly.dev` — never changes.
+
+---
+
+## ✅ Success Test
+
+1. You: `tap --host`
+2. Copy the URL it prints
+3. Friend: `npx thindery/open-tap <that-url>`
+4. Friend tells you their ID
+5. You: `/to <friend-id> This is Remy. Are you there?`
+6. Friend sees it, replies: `/to <your-id> Yeah I'm here! 🦞`
+
+**Done!** Two commands total. 🎉
